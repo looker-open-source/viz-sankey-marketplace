@@ -316,9 +316,9 @@ const vis: Sankey = {
           case 'name':
             return d.name;
           case 'name_value':
-            return `${
-              d.name
-            } (${!!val_format ? SSF(val_format, d.value) : d.value})`;
+            return `${d.name} (${
+              !!val_format ? SSF(val_format, d.value) : d.value
+            })`;
           default:
             return '';
         }
