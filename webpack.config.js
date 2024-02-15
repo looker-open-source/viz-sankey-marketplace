@@ -1,4 +1,4 @@
-var path = require('path')
+var path = require('path');
 
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
@@ -8,28 +8,26 @@ var webpackConfig = {
     sankey: './src/sankey.ts',
   },
   output: {
-    filename: "[name].js",
-    path: path.join(__dirname),
-    library: "[name]",
-    libraryTarget: "umd"
+    filename: 'bundle.js',
+    path: path.join(path.resolve(__dirname), '/dist'),
+    library: '[name]',
+    libraryTarget: 'umd',
   },
   resolve: {
-    extensions: [".ts", ".js"]
+    extensions: ['.ts', '.js'],
   },
-  plugins: [
-    new UglifyJSPlugin()
-  ],
+  plugins: [new UglifyJSPlugin()],
   module: {
     rules: [
-      { test: /\.js$/, loader: "babel-loader" },
-      { test: /\.ts$/, loader: "ts-loader" },
-    ]
+      {test: /\.js$/, loader: 'babel-loader'},
+      {test: /\.ts$/, loader: 'ts-loader'},
+    ],
   },
   performance: {
     hints: false,
     maxEntrypointSize: 512000,
-    maxAssetSize: 512000
-  }
-}
+    maxAssetSize: 512000,
+  },
+};
 
-module.exports = webpackConfig
+module.exports = webpackConfig;
