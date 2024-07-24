@@ -7,7 +7,7 @@
     "test": "tests"
   },
   "scripts": {
-    "build": "webpack --config webpack.config.js",
+    "build": "NODE_OPTIONS=--openssl-legacy-provider webpack --config webpack.config.js",
     "watch": "webpack --config webpack.config.js --watch --progress",
     "lint": "tslint --project tsconfig.json --format stylish 'src/**/*.ts'",
     "lint-fix": "tslint --fix --project tsconfig.json  --format stylish 'src/**/*.ts'",
