@@ -47,5 +47,6 @@
   },
   "resolutions": {
     "loader-utils": "^1.4.2"
-  }
+  },
+  "engines": { "node": "18.12.0" }
 }
