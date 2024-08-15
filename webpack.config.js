@@ -1,6 +1,6 @@
 var path = require('path');
 
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 
 var webpackConfig = {
   mode: 'production',
@@ -16,7 +16,7 @@ var webpackConfig = {
   resolve: {
     extensions: ['.ts', '.js'],
   },
-  plugins: [new UglifyJSPlugin()],
+  plugins: [new TerserPlugin()],
   module: {
     rules: [
       {test: /\.js$/, loader: 'babel-loader'},
