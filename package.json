@@ -45,10 +45,10 @@
     "ssf": "^0.11.2",
     "typescript": "^5.1.6"
   },
-  "resolutions": {
-    "loader-utils": "^1.4.2"
-  },
   "engines": {
     "node": "18.12.0"
+  },
+  "resolutions": {
+    "loader-utils": "^1.4.2"
   }
 }
