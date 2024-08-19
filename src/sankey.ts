@@ -1,6 +1,7 @@
 import {sankey, sankeyLinkHorizontal, sankeyLeft} from 'd3-sankey';
-import {handleErrors, d3} from './utils';
+import {handleErrors} from './utils';
 import {format as SSF} from 'ssf';
+import * as d3 from "d3";
 
 import {
   Cell,
@@ -136,7 +137,7 @@ const vis: Sankey = {
       links: [],
     };
 
-    const nodes = d3.set();
+    const nodes = new Set();
 
     data.forEach(function (d: any) {
       // variable number of dimensions
@@ -175,14 +176,14 @@ const vis: Sankey = {
       });
     });
 
-    const nodesArray = nodes.values();
+    const nodesArray = Array.from(nodes.values());
 
     graph.links.forEach(function (d: Cell) {
       d.source = nodesArray.indexOf(d.source);
       d.target = nodesArray.indexOf(d.target);
     });
 
-    graph.nodes = nodes.values().map((d: any) => {
+    graph.nodes = Array.from(nodes.values()).map((d: any) => {
       return {
         name: d.slice(0, d.split('len:')[1]),
       };
@@ -220,10 +221,10 @@ const vis: Sankey = {
           return 0.5;
         });
       })
-      .on('click', function (this: any, d: Cell) {
+      .on('click', function (event: MouseEvent, d: Cell) {
         // Add drill menu event
-        const coords = d3.mouse(this);
-        const event: object = {pageX: coords[0], pageY: coords[1]};
+        const coords = d3.pointer(event);
+        const eventDetails: object = {pageX: coords[0], pageY: coords[1]};
         LookerCharts.Utils.openDrillMenu({
           links: d.drillLinks,
           event: event,
