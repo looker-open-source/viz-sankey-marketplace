@@ -1,5 +1,7 @@
 # Sankey Visualization
 
+**This is not an officially supported Google product.**
+
 This visualization creates a [sankey diagram](https://en.wikipedia.org/wiki/Sankey_diagram), which displays sequences of transitions. Sankey diagrams are a specific type of flow diagram, in which the width of each arrow is proportional to the flow quantity. Sankey diagrams are often used in scientific fields, especially physics. They are used to represent energy inputs, useful outputs, and wasted outputs. Sankeys can also be used to understand how users arrive at and navigate through an application or website.
 
 Good use cases include:
