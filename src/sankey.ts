@@ -17,6 +17,8 @@ declare var LookerCharts: LookerChartUtils;
 
 interface Sankey extends VisualizationDefinition {
   svg?: any;
+  addError?: (error: any) => void;
+  clearErrors?: (group?: string) => void;
 }
 
 const vis: Sankey = {
@@ -65,36 +67,21 @@ const vis: Sankey = {
   },
   // Render in response to the data or settings changing
   updateAsync(data, element, config, queryResponse, details, doneRendering) {
-    if (this.clearErrors) {
-      this.clearErrors();
-    }
-
-    if (
-      !handleErrors(this, queryResponse, {
-        min_pivots: 0,
-        max_pivots: 0,
-        min_dimensions: 2,
-        max_dimensions: undefined,
-        min_measures: 1,
-        max_measures: 1,
-      })
-    ) {
-      doneRendering();
-      return;
-    }
-
-    if (!data || data.length === 0) {
-      if (this.addError) {
-        this.addError({
-          title: 'No Data',
-          message: 'The query returned no results.',
-        });
-      }
-      doneRendering();
-      return;
-    }
+    this.clearErrors?.();
 
     try {
+      if (
+        !handleErrors(this, queryResponse, {
+          min_pivots: 0,
+          max_pivots: 0,
+          min_dimensions: 2,
+          max_dimensions: undefined,
+          min_measures: 1,
+          max_measures: 1,
+        })
+      )
+        return;
+
       const width = element.clientWidth;
       const height = element.clientHeight;
 
@@ -108,10 +95,15 @@ const vis: Sankey = {
       const measure = queryResponse.fields.measure_like[0];
       const val_format = measure.value_format;
 
+      // config object is not set properly on DB-next
+      // unless a user interacts with the config. Just catch the case for now.
       if (typeof config.label_type === 'undefined') {
         config.label_type = 'name';
       }
 
+      //  The standard d3.ScaleOrdinal<string, {}>, causes error
+      // `no-inferred-empty-object-type  Explicit type parameter needs to be provided to the function call`
+      // https://stackoverflow.com/questions/31564730/typescript-with-d3js-with-definitlytyped
       const color = d3
         .scaleOrdinal<string[], string[]>()
         .range(config.color_range || vis.options.color_range.default);
@@ -127,6 +119,7 @@ const vis: Sankey = {
           [width - 1, height - 6],
         ]);
 
+      // TODO: Placeholder until @types catches up with sankey
       const newSankeyProps: any = sankeyInst;
       newSankeyProps.nodeSort(null);
 
@@ -152,6 +145,7 @@ const vis: Sankey = {
       const nodes = new Set();
 
       data.forEach(function (d: any) {
+        // variable number of dimensions
         const path: any[] = [];
         for (const dim of dimensions) {
           if (d[dim.name].value === null && !config.show_null_points) break;
@@ -159,18 +153,12 @@ const vis: Sankey = {
         }
         path.forEach(function (p: any, i: number) {
           if (i === path.length - 1) return;
-          const source: any =
-            path.slice(i, i + 1)[0] +
-            i +
-            `len:${path.slice(i, i + 1)[0].length}`;
-          const target: any =
-            path.slice(i + 1, i + 2)[0] +
-            (i + 1) +
-            `len:${path.slice(i + 1, i + 2)[0].length}`;
+          const source: any = `${path[i]}${i}len:${path[i].length}`;
+          const target: any = `${path[i + 1]}${i + 1}len:${path[i + 1].length}`;
 
           nodes.add(source);
           nodes.add(target);
-
+          // Setup drill links
           const drillLinks: Link[] = [];
           for (const key in d) {
             if (d[key].links) {
@@ -191,14 +179,20 @@ const vis: Sankey = {
 
       const nodesArray = Array.from(nodes.values());
 
+      const nodeIndexMap = new Map(
+        nodesArray.map((val, index) => [val, index])
+      );
+
       graph.links.forEach(function (d: Cell) {
-        d.source = nodesArray.indexOf(d.source);
-        d.target = nodesArray.indexOf(d.target);
+        d.source = nodeIndexMap.get(d.source);
+        d.target = nodeIndexMap.get(d.target);
       });
 
       graph.nodes = Array.from(nodes.values()).map((d: any) => {
+        const parts = d.split('len:');
+        const len = parseInt(parts[parts.length - 1], 10);
         return {
-          name: d.slice(0, d.split('len:')[1]),
+          name: d.slice(0, len),
         };
       });
 
@@ -210,6 +204,8 @@ const vis: Sankey = {
         .append('path')
         .attr('class', 'link')
         .attr('d', function (d: any) {
+          // Prevents exact horizontal sankey links from disappearing.
+          // See for reference https://github.com/d3/d3-sankey/issues/28
           const path = sankeyLinkHorizontal()(d);
           const match = path ? path.match(/,([^C]+)C/) : null;
           if (match && path && match.length === 2) {
@@ -233,6 +229,7 @@ const vis: Sankey = {
           });
         })
         .on('click', function (event: MouseEvent, d: Cell) {
+          // Add drill menu event
           const coords = d3.pointer(event);
           const eventDetails: object = {pageX: coords[0], pageY: coords[1]};
           LookerCharts.Utils.openDrillMenu({
@@ -245,7 +242,9 @@ const vis: Sankey = {
           d3.selectAll('.link').style('opacity', 0.4);
         });
 
+      // gradients https://bl.ocks.org/micahstubbs/bf90fda6717e243832edad6ed9f82814
       link.style('stroke', function (d: Cell, i: number) {
+        // make unique gradient ids
         const gradientID = 'gradient' + i;
 
         const startColor = color(d.source.name.replace(/ .*/, ''));
@@ -325,7 +324,9 @@ const vis: Sankey = {
             case 'name':
               return d.name;
             case 'name_value':
-              return `${d.name} (${!!val_format ? SSF(val_format, d.value) : d.value})`;
+              return `${
+                d.name
+              } (${!!val_format ? SSF(val_format, d.value) : d.value})`;
             default:
               return '';
           }
@@ -341,17 +342,14 @@ const vis: Sankey = {
       node.append('title').text(function (d: Cell) {
         return d.name + '\n' + d.value;
       });
-
-      doneRendering();
     } catch (error) {
-      console.error(error);
-      if (this.addError) {
-        this.addError({
-          title: 'Rendering Error',
-          message: 'An unexpected error occurred while drawing the chart.',
-        });
-      }
-
+      console.error('Sankey Rendering Error:', error);
+      this.addError?.({
+        title: 'Rendering Error',
+        message:
+          'An unexpected error occurred while drawing the visualization.',
+      });
+    } finally {
       doneRendering();
     }
   },
