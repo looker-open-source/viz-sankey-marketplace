@@ -1,5 +1,5 @@
 import {sankey, sankeyLinkHorizontal, sankeyLeft} from 'd3-sankey';
-import {handleErrors} from './utils';
+import {extractHorizontalPathMatch, handleErrors} from './utils';
 import {format as SSF} from 'ssf';
 import * as d3 from 'd3';
 
@@ -207,7 +207,7 @@ const vis: Sankey = {
           // Prevents exact horizontal sankey links from disappearing.
           // See for reference https://github.com/d3/d3-sankey/issues/28
           const path = sankeyLinkHorizontal()(d);
-          const match = path ? path.match(/,([^C]+)C/) : null;
+          const match = extractHorizontalPathMatch(path);
           if (match && path && match.length === 2) {
             const replacementValue = +match[1] + 0.01;
             const fixedPath = path.replace(match[1], '' + replacementValue);
