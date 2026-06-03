@@ -1,9 +1,16 @@
-import * as d3 from "d3";
+import * as d3 from 'd3';
 
 import {VisConfig, VisQueryResponse, VisualizationDefinition} from './types';
 import {fromSheetsToD3Format} from './currency_formatter';
 
 export {d3};
+
+export const extractHorizontalPathMatch = (
+  path: string | null | undefined
+): RegExpMatchArray | null => {
+  if (!path) return null;
+  return path.match(/,([^C]+)C/);
+};
 
 export const formatType = (valueFormat: string) => {
   const format = fromSheetsToD3Format(valueFormat);

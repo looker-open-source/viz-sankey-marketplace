@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/looker-open-source/viz-sankey-marketplace/compare/v1.0.0...v1.0.1) (2026-05-29)
+
+
+### Bug Fixes
+
+* blank tiles in pdf mitigation ([#77](https://github.com/looker-open-source/viz-sankey-marketplace/issues/77)) ([5e4131e](https://github.com/looker-open-source/viz-sankey-marketplace/commit/5e4131e18a463555bde5a1ec7809ae2ca92a4e40))
+
 ## 1.0.0 (2024-12-13)
 
 
