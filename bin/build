@@ -24,7 +24,7 @@ function looker::configure() {
 # Builds the target JS file from sources configuring if necessary.
 function looker::build() {
   pushd "$GIT_ROOT_DIR" &> /dev/null
-  env NODE_OPTIONS="--openssl-legacy-provider" yarn build
+  yarn build
   popd &> /dev/null
 }
 
