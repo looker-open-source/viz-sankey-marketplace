@@ -24,7 +24,7 @@ function looker::configure() {
 # Runs all the unit tests.
 function looker::test() {
   pushd "$GIT_ROOT_DIR" &> /dev/null
-  env NODE_OPTIONS="--openssl-legacy-provider" yarn test
+  yarn test
   popd &> /dev/null
 }
 
