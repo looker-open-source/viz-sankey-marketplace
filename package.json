@@ -29,10 +29,10 @@
     "tslint-config-standard": "7.0.0",
     "webpack": "^5.104.1",
     "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "5.2.4"
+    "webpack-dev-server": "5.2.5"
   },
   "dependencies": {
-    "@babel/core": "7.24.4",
+    "@babel/core": "7.29.6",
     "@babel/preset-env": "^7.24.4",
     "@babel/preset-react": "^7.24.4",
     "@types/d3": "^7.4.3",
