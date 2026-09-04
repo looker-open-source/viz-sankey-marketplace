@@ -24,6 +24,16 @@ var webpackConfig = {
       {test: /\.ts$/, loader: 'ts-loader'},
     ],
   },
+  devServer: {
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+    },
+    port: 8080,
+    allowedHosts: 'all',
+    hot: false,
+    liveReload: false,
+    static: false,
+  },
   performance: {
     hints: false,
     maxEntrypointSize: 512000,

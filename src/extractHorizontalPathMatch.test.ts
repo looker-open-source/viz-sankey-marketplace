@@ -3,7 +3,7 @@
 // This software is subject to the Google Cloud Terms of Service, as
 // modified by the "General Software Terms" of the Google Cloud Service Specific Terms, available at: https://cloud.google.com/terms/service-terms.
 
-import { describe, expect, it } from '@jest/globals'
+import { describe, expect, it, jest } from '@jest/globals'
 import { extractHorizontalPathMatch } from './utils'
 
 describe('extractHorizontalPathMatch', () => {
@@ -30,3 +30,64 @@ describe('extractHorizontalPathMatch', () => {
     expect(match![1]).toBe('15.5')
   })
 })
+
+describe('handleErrors', () => {
+  it('should return false and add error if dimensions count is below minimum', () => {
+    const mockVis: any = {
+      addError: jest.fn(),
+      clearErrors: jest.fn()
+    }
+    const mockResponse: any = {
+      fields: {
+        pivots: [],
+        dimensions: [{ name: 'dim1' }],
+        measure_like: [{ name: 'm1' }]
+      }
+    }
+    const options: any = {
+      min_pivots: 0,
+      max_pivots: 0,
+      min_dimensions: 2,
+      max_dimensions: undefined,
+      min_measures: 1,
+      max_measures: 1
+    }
+
+    const { handleErrors } = require('./utils')
+    const result = handleErrors(mockVis, mockResponse, options)
+    expect(result).toBe(false)
+    expect(mockVis.addError).toHaveBeenCalledWith({
+      title: 'Not Enough Dimensions',
+      message: 'This visualization requires at least 2 dimensions.',
+      group: 'dim-req'
+    })
+  })
+
+  it('should return true and clear errors if query response meets options criteria', () => {
+    const mockVis: any = {
+      addError: jest.fn(),
+      clearErrors: jest.fn()
+    }
+    const mockResponse: any = {
+      fields: {
+        pivots: [],
+        dimensions: [{ name: 'dim1' }, { name: 'dim2' }],
+        measure_like: [{ name: 'm1' }]
+      }
+    }
+    const options: any = {
+      min_pivots: 0,
+      max_pivots: 0,
+      min_dimensions: 2,
+      max_dimensions: undefined,
+      min_measures: 1,
+      max_measures: 1
+    }
+
+    const { handleErrors } = require('./utils')
+    const result = handleErrors(mockVis, mockResponse, options)
+    expect(result).toBe(true)
+    expect(mockVis.clearErrors).toHaveBeenCalled()
+  })
+})
+

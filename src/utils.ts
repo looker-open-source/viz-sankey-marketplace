@@ -28,9 +28,8 @@ export const handleErrors = (
     min: number,
     max: number
   ): boolean => {
-    if (!vis.addError || !vis.clearErrors) return false
     if (count < min) {
-      vis.addError({
+      vis.addError?.({
         title: `Not Enough ${noun}s`,
         message: `This visualization requires ${
           min === max ? 'exactly' : 'at least'
@@ -40,7 +39,7 @@ export const handleErrors = (
       return false
     }
     if (count > max) {
-      vis.addError({
+      vis.addError?.({
         title: `Too Many ${noun}s`,
         message: `This visualization requires ${
           min === max ? 'exactly' : 'no more than'
@@ -49,11 +48,13 @@ export const handleErrors = (
       })
       return false
     }
-    vis.clearErrors(group)
+    vis.clearErrors?.(group)
     return true
   }
 
-  const { pivots, dimensions, measure_like: measures } = res.fields
+  const pivots = res?.fields?.pivots || []
+  const dimensions = res?.fields?.dimensions || res?.fields?.dimension_like || []
+  const measures = res?.fields?.measures || res?.fields?.measure_like || []
 
   return (
     check(
