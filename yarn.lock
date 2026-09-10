@@ -5495,8 +5495,8 @@ write-file-atomic@^4.0.2:
     signal-exit "^3.0.7"
 
 ws@^8.18.0:
-  version "8.18.0"
-  resolved "https://registry.npmjs.org/ws/-/ws-8.18.0.tgz"
+  version "8.21.3"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-8.21.3.tgz#660b4faddb6a3e575c86e078126919961f4de4fc"
 
 xml-name-validator@^5.0.0:
   version "5.0.0"
