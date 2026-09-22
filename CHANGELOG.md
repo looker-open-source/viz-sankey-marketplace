@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/looker-open-source/viz-sankey-marketplace/compare/v1.0.1...v1.0.2) (2026-09-10)
+
+
+### Bug Fixes
+
+* PDF rendering tile mitigation and done callback ([#108](https://github.com/looker-open-source/viz-sankey-marketplace/issues/108)) ([90c0042](https://github.com/looker-open-source/viz-sankey-marketplace/commit/90c004287beb15bb521627f221e33d28a8422277))
+
 ## [1.0.1](https://github.com/looker-open-source/viz-sankey-marketplace/compare/v1.0.0...v1.0.1) (2026-05-29)
 
 
