@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.7](https://github.com/looker-open-source/viz-sankey-marketplace/compare/v1.0.2...v1.0.7) (2026-11-10)
+
+
+### Miscellaneous Chores
+
+* sync release version with marketplace listing ([#132](https://github.com/looker-open-source/viz-sankey-marketplace/issues/132)) ([6535b67](https://github.com/looker-open-source/viz-sankey-marketplace/commit/6535b6700067195f600d8be283553e07944f6866))
+
 ## [1.0.2](https://github.com/looker-open-source/viz-sankey-marketplace/compare/v1.0.1...v1.0.2) (2026-09-10)
 
 

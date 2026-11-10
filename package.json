@@ -1,6 +1,6 @@
 {
   "name": "viz-sankey-marketplace",
-  "version": "1.0.2",
+  "version": "1.0.7",
   "license": "MIT",
   "directories": {
     "lib": "lib",
